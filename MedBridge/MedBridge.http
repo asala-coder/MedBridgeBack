@@ -1,0 +1,6 @@
+@MedBridge_HostAddress = http://localhost:5074
+
+GET {{MedBridge_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
