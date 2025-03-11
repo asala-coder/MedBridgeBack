@@ -171,3 +171,4 @@ F:\projects\Project\MedBridge\MedBridge\obj\Debug\net8.0\MedBridge.genruntimecon
 F:\projects\Project\MedBridge\MedBridge\obj\Debug\net8.0\ref\MedBridge.dll
 F:\projects\Project\MedBridge\MedBridge\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 F:\projects\Project\MedBridge\MedBridge\obj\Debug\net8.0\MedBridge.sourcelink.json
+F:\projects\Project\MedBridge\MedBridge\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

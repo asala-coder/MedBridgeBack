@@ -1,4 +1,5 @@
 ﻿
+using MedBridge.Models.Messages;
 using MedBridge.Models.ProductModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -40,5 +41,7 @@ namespace MedBridge.Models
 
 
         public ICollection<ProductModel> Products { get; set; } = new List<ProductModel>();
+
+        public ICollection<ContactUs> ContactUs { get; set; } = new List<ContactUs>();
     }
 }

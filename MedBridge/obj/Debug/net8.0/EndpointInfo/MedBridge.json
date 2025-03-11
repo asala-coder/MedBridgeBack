@@ -185,6 +185,180 @@
         }
       }
     },
+    "/api/ContactUs": {
+      "get": {
+        "tags": [
+          "ContactUs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ContactUs"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "User.Email"
+                ],
+                "type": "object",
+                "properties": {
+                  "MessageId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Message": {
+                    "type": "string"
+                  },
+                  "UserId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "User.Id": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "User.Name": {
+                    "maxLength": 50,
+                    "type": "string"
+                  },
+                  "User.Email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "User.Password": {
+                    "maxLength": 100,
+                    "minLength": 8,
+                    "pattern": "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+                    "type": "string"
+                  },
+                  "User.PasswordSalt": {
+                    "type": "string",
+                    "format": "byte"
+                  },
+                  "User.ConfirmPassword": {
+                    "maxLength": 100,
+                    "minLength": 8,
+                    "pattern": "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+                    "type": "string"
+                  },
+                  "User.ResetToken": {
+                    "type": "string"
+                  },
+                  "User.ResetTokenExpires": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "User.Phone": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "User.MedicalSpecialist": {
+                    "type": "string"
+                  },
+                  "User.Address": {
+                    "type": "string"
+                  },
+                  "User.ProfileImage": {
+                    "type": "string",
+                    "format": "byte"
+                  },
+                  "User.CreatedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "User.Role": {
+                    "type": "string"
+                  },
+                  "User.Products": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ProductModel"
+                    }
+                  },
+                  "User.ContactUs": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ContactUs"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "MessageId": {
+                  "style": "form"
+                },
+                "Message": {
+                  "style": "form"
+                },
+                "UserId": {
+                  "style": "form"
+                },
+                "User.Id": {
+                  "style": "form"
+                },
+                "User.Name": {
+                  "style": "form"
+                },
+                "User.Email": {
+                  "style": "form"
+                },
+                "User.Password": {
+                  "style": "form"
+                },
+                "User.PasswordSalt": {
+                  "style": "form"
+                },
+                "User.ConfirmPassword": {
+                  "style": "form"
+                },
+                "User.ResetToken": {
+                  "style": "form"
+                },
+                "User.ResetTokenExpires": {
+                  "style": "form"
+                },
+                "User.Phone": {
+                  "style": "form"
+                },
+                "User.MedicalSpecialist": {
+                  "style": "form"
+                },
+                "User.Address": {
+                  "style": "form"
+                },
+                "User.ProfileImage": {
+                  "style": "form"
+                },
+                "User.CreatedAt": {
+                  "style": "form"
+                },
+                "User.Role": {
+                  "style": "form"
+                },
+                "User.Products": {
+                  "style": "form"
+                },
+                "User.ContactUs": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/product": {
       "post": {
         "tags": [
@@ -696,6 +870,12 @@
                     "items": {
                       "$ref": "#/components/schemas/ProductModel"
                     }
+                  },
+                  "ContactUs": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ContactUs"
+                    }
                   }
                 }
               },
@@ -743,6 +923,9 @@
                   "style": "form"
                 },
                 "Products": {
+                  "style": "form"
+                },
+                "ContactUs": {
                   "style": "form"
                 }
               }
@@ -831,6 +1014,12 @@
                     "items": {
                       "$ref": "#/components/schemas/ProductModel"
                     }
+                  },
+                  "ContactUs": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ContactUs"
+                    }
                   }
                 }
               },
@@ -878,6 +1067,9 @@
                   "style": "form"
                 },
                 "Products": {
+                  "style": "form"
+                },
+                "ContactUs": {
                   "style": "form"
                 }
               }
@@ -1061,6 +1253,12 @@
                       "$ref": "#/components/schemas/ProductModel"
                     }
                   },
+                  "ContactUs": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ContactUs"
+                    }
+                  },
                   "profileImage": {
                     "type": "string",
                     "format": "binary"
@@ -1111,6 +1309,9 @@
                   "style": "form"
                 },
                 "Products": {
+                  "style": "form"
+                },
+                "ContactUs": {
                   "style": "form"
                 },
                 "profileImage": {
@@ -1184,6 +1385,27 @@
               "$ref": "#/components/schemas/ProductModel"
             },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContactUs": {
+        "type": "object",
+        "properties": {
+          "messageId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
           }
         },
         "additionalProperties": false
@@ -1320,6 +1542,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ProductModel"
+            },
+            "nullable": true
+          },
+          "contactUs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContactUs"
             },
             "nullable": true
           }

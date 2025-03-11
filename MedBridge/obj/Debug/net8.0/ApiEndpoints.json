@@ -109,6 +109,122 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MedBridge.Controllers.MesaageController.ContactUsController",
+    "Method": "GetAsync",
+    "RelativePath": "api/ContactUs",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedBridge.Controllers.MesaageController.ContactUsController",
+    "Method": "AddAsync",
+    "RelativePath": "api/ContactUs",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "MessageId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Message",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "UserId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.Id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.Email",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.Password",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.PasswordSalt",
+        "Type": "System.Byte[]",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.ConfirmPassword",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.ResetToken",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.ResetTokenExpires",
+        "Type": "System.Nullable\u00601[[System.DateTime, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.Phone",
+        "Type": "System.Int64",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.MedicalSpecialist",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.Address",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.ProfileImage",
+        "Type": "System.Byte[]",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.CreatedAt",
+        "Type": "System.DateTime",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.Role",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.Products",
+        "Type": "System.Collections.Generic.ICollection\u00601[[MedBridge.Models.ProductModels.ProductModel, MedBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "User.ContactUs",
+        "Type": "System.Collections.Generic.ICollection\u00601[[MedBridge.Models.Messages.ContactUs, MedBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MedBridge.Controllers.UserController",
     "Method": "RefreshToken",
     "RelativePath": "api/MedBridge/refresh-token",
@@ -226,6 +342,11 @@
       {
         "Name": "Products",
         "Type": "System.Collections.Generic.ICollection\u00601[[MedBridge.Models.ProductModels.ProductModel, MedBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContactUs",
+        "Type": "System.Collections.Generic.ICollection\u00601[[MedBridge.Models.Messages.ContactUs, MedBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": false
       },
       {
@@ -350,6 +471,11 @@
         "Name": "Products",
         "Type": "System.Collections.Generic.ICollection\u00601[[MedBridge.Models.ProductModels.ProductModel, MedBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": false
+      },
+      {
+        "Name": "ContactUs",
+        "Type": "System.Collections.Generic.ICollection\u00601[[MedBridge.Models.Messages.ContactUs, MedBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -435,6 +561,11 @@
       {
         "Name": "Products",
         "Type": "System.Collections.Generic.ICollection\u00601[[MedBridge.Models.ProductModels.ProductModel, MedBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "ContactUs",
+        "Type": "System.Collections.Generic.ICollection\u00601[[MedBridge.Models.Messages.ContactUs, MedBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": false
       }
     ],

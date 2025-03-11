@@ -1,4 +1,5 @@
 ﻿using MedBridge.Models;
+using MedBridge.Models.Messages;
 using MedBridge.Models.ProductModels;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,5 +50,8 @@ namespace MoviesApi.models
         public DbSet<User> users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
+
+
+        public DbSet<ContactUs> ContactUs { get; set; }
     }
 }

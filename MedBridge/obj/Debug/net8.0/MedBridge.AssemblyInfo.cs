@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MedBridge")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1687bb1958f3094326bdcdedfc2e4de1bf083f50")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+afed934352746f604589cb377d7f6733608786fe")]
 [assembly: System.Reflection.AssemblyProductAttribute("MedBridge")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MedBridge")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
