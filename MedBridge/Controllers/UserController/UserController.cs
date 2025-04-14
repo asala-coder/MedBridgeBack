@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using MoviesApi.models;
+using Org.BouncyCastle.Crypto.Generators;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -37,6 +38,7 @@ namespace MedBridge.Controllers
         [HttpPost("User/signup")]
         public async Task<IActionResult> SignUp([FromForm] User user)
         {
+            Console.WriteLine($"Name: {user.Name}, Email: {user.Email}, Password: {user.Password}, ConfirmPassword: {user.ConfirmPassword}");
             try
             {
                 if (string.IsNullOrWhiteSpace(user.Password) ||
@@ -51,8 +53,11 @@ namespace MedBridge.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage)
                         .ToList();
+
+                    _logger.LogError("Model errors: " + string.Join(", ", errors)); // دي هتظهر في output
                     return BadRequest(new { errors });
                 }
+
 
                 if (user.Password != user.ConfirmPassword)
                 {
@@ -227,10 +232,11 @@ namespace MedBridge.Controllers
             return Ok("Logged out successfully.");
         }
 
-        [HttpGet("User/{id}")]
-        public async Task<IActionResult> GetUser(int id)
+    
+        [HttpGet("User/{email}")]
+        public async Task<IActionResult> GetUser(string email)
         {
-            var user = await _context.users.FindAsync(id);
+            var user = await _context.users.FirstOrDefaultAsync(u => u.Email == email);
             if (user == null)
             {
                 return NotFound(new { message = "User not found" });
@@ -238,16 +244,16 @@ namespace MedBridge.Controllers
             return Ok(user);
         }
 
-
-        [HttpPut("User/{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromForm] User updatedUser, IFormFile? profileImage)
+        [HttpPut("User/{Email}")]
+        public async Task<IActionResult> UpdateUser(string Email, [FromForm] User updatedUser, IFormFile? profileImage)
         {
-            if (id != updatedUser.Id)
+            if (Email != updatedUser.Email)
             {
-                return BadRequest("User ID mismatch");
+                return BadRequest("User Email mismatch");
             }
 
-            var existingUser = await _context.users.FindAsync(id);
+            var existingUser = await _context.users.FirstOrDefaultAsync(u => u.Email == Email);
+
             if (existingUser == null)
             {
                 return NotFound("User not found");
@@ -255,10 +261,15 @@ namespace MedBridge.Controllers
 
             existingUser.Name = updatedUser.Name;
             existingUser.Email = updatedUser.Email;
-            existingUser.Phone = updatedUser.Phone;
             existingUser.MedicalSpecialist = updatedUser.MedicalSpecialist;
-            existingUser.Address = updatedUser.Address;
 
+            // If password is provided, we need to hash it (or handle decoding/encryption as needed)
+            if (!string.IsNullOrEmpty(updatedUser.Password))
+            {
+                existingUser.Password = HashPassword(updatedUser.Password);  // Hash the password before saving
+            }
+
+            // Optional: Handle the profile image
             if (profileImage != null)
             {
                 using (var memoryStream = new MemoryStream())
@@ -268,12 +279,59 @@ namespace MedBridge.Controllers
                 }
             }
 
-
             _context.users.Update(existingUser);
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Profile updated successfully" });
         }
+
+        private string HashPassword(string password)
+        {
+            // Implement your hashing logic here
+            // For example, using bcrypt or any other hashing method
+            return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+        // In UserController:
+
+        /// <summary>
+        /// Partially updates a user’s Role and/or MedicalSpecialist.
+        /// PATCH api/MedBridge/User/{email}
+        /// </summary>
+        [HttpPatch("User/info/{email}")]
+        public async Task<IActionResult> UpdateUSerInfo(
+            string email,
+            [FromBody] RoleSpecialistUpdateDto dto)
+        {
+            // 1. Find existing user
+            var existingUser = await _context.users
+                .FirstOrDefaultAsync(u => u.Email == email);
+            if (existingUser == null)
+                return NotFound(new { message = "User not found" });
+
+            // 2. Update only the allowed fields
+            if (!string.IsNullOrWhiteSpace(dto.Role))
+                existingUser.Role = dto.Role;
+
+            if (!string.IsNullOrWhiteSpace(dto.MedicalSpecialist))
+                existingUser.MedicalSpecialist = dto.MedicalSpecialist;
+
+            // 3. Save
+            _context.users.Update(existingUser);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Role and MedicalSpecialist updated successfully" });
+        }
+
+        // DTO class 
+        public class RoleSpecialistUpdateDto
+        {
+         
+            public string? Role { get; set; }
+
+  
+            public string? MedicalSpecialist { get; set; }
+        }
+
 
         [HttpDelete("User/{id}")]
         public async Task<IActionResult> DeleteUser(int id)

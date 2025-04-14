@@ -1,5 +1,26 @@
 [
   {
+    "ContainingType": "MedBridge.Controllers.CartController",
+    "Method": "AddToCart",
+    "RelativePath": "api/cart/add",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "ProductId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Quantity",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MedBridge.Controllers.ProductControllers.CategoriesController",
     "Method": "CreateAsync",
     "RelativePath": "api/Categories",
@@ -243,14 +264,14 @@
   {
     "ContainingType": "MedBridge.Controllers.UserController",
     "Method": "GetUser",
-    "RelativePath": "api/MedBridge/User/{id}",
+    "RelativePath": "api/MedBridge/User/{email}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
-        "Type": "System.Int32",
+        "Name": "email",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],
@@ -259,14 +280,14 @@
   {
     "ContainingType": "MedBridge.Controllers.UserController",
     "Method": "UpdateUser",
-    "RelativePath": "api/MedBridge/User/{id}",
+    "RelativePath": "api/MedBridge/User/{Email}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "id",
-        "Type": "System.Int32",
+        "Name": "Email",
+        "Type": "System.String",
         "IsRequired": true
       },
       {
@@ -368,6 +389,27 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedBridge.Controllers.UserController",
+    "Method": "UpdateUSerInfo",
+    "RelativePath": "api/MedBridge/User/info/{email}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "email",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "MedBridge.Controllers.UserController\u002BRoleSpecialistUpdateDto",
         "IsRequired": true
       }
     ],

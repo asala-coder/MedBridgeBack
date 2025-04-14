@@ -42,6 +42,32 @@ namespace MedBridge.Controllers.ProductControllers
             //    await dto.Image.CopyToAsync(stream);
             //}
 
+
+            bool validateCategoryID = await _dbContext.Categories.AnyAsync(g => g.CategoryId == dto.CategoryId);
+
+            if (!validateCategoryID)
+                return BadRequest("Not validate Category ID");
+
+            bool validateSubCategoryID = await _dbContext.subCategories
+            .AnyAsync(s => s.SubCategoryId == dto.SubCategoryId && s.CategoryId == dto.CategoryId);
+
+            var subCat = await _dbContext.subCategories
+    .Where(s => s.SubCategoryId == dto.SubCategoryId)
+    .FirstOrDefaultAsync();
+
+            if (subCat != null)
+            {
+                Console.WriteLine($"Found SubCategory with CategoryId = {subCat.CategoryId}");
+            }
+            else
+            {
+                Console.WriteLine("SubCategory not found at all.");
+            }
+
+
+
+            if (!validateSubCategoryID)
+                return BadRequest("Not validate SubCategory ID");
             ProductModel product = new ProductModel
             {
                 ProductId = dto.ProductId,
