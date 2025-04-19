@@ -28,8 +28,8 @@ namespace MedBridge.Models.ProductModels
         // ✅ Add Foreign key for Category
         public int CategoryId { get; set; }
         public Category Category { get; set; }
-
-           public int UserId { get; set; }
+        public List<string> ImageUrls { get; set; }
+        public int UserId { get; set; }
         public User user { get; set; }
     }
 }

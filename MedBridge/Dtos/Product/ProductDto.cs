@@ -27,7 +27,7 @@ namespace MedBridge.Dtos.Product
    
        
         public int CategoryId { get; set; }
-
+        public List<IFormFile> Images { get; set; } // Multiple images
         public int UserId { get; set; }
 
         //public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();

@@ -13,83 +13,102 @@ namespace MedBridge.Controllers.ProductControllers
     public class productController : ControllerBase
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly string _imageUploadPath = Path.Combine(Directory.GetCurrentDirectory(), "assets", "images");
 
         public productController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
-
-        private new List<string> _allowedExtensions = new List<string> { ".jpg", ".png" };
-        private double _maxAllowedPosterSize = 1048576;
-
-
+        private List<string> _allowedExtensions = new List<string>
+{
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".bmp",
+    ".webp",
+    ".tiff",
+    ".tif",
+    ".svg",
+    ".ico",
+    ".heif"
+};
+        private double _maxAllowedPosterSize = 10 * 1024 * 1024; // Max size: 10 MB (10,048,576 bytes)
 
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromForm] ProductDto dto)
         {
-            //if (dto.Image != null)
-            //{
-            //    var allowedExtensions = new List<string> { ".jpg", ".png" };
-            //    var extension = Path.GetExtension(dto.Image.FileName).ToLower();
+            // Validate CategoryId
+            var categoryExists = await _dbContext.Categories
+                .AnyAsync(c => c.CategoryId == dto.CategoryId);
+            if (!categoryExists) return BadRequest("Category ID does not exist.");
 
-            //    if (!allowedExtensions.Contains(extension))
-            //        return BadRequest("Only PNG and JPG images are allowed.");
+            // Validate SubCategoryId
+            var subCategoryExists = await _dbContext.subCategories
+                .AnyAsync(s => s.SubCategoryId == dto.SubCategoryId && s.CategoryId == dto.CategoryId);
+            if (!subCategoryExists) return BadRequest("SubCategory ID does not exist or does not match Category ID.");
 
-            //    if (dto.Image.Length > 1048576)
-            //        return BadRequest("Max allowed size for image is 1 MB.");
+            // Validate UserId
+            var userExists = await _dbContext.users
+                .AnyAsync(u => u.Id == dto.UserId);
+            if (!userExists) return BadRequest("The specified UserId does not exist.");
 
-            //    using var stream = new MemoryStream();
-            //    await dto.Image.CopyToAsync(stream);
-            //}
-
-
-            bool validateCategoryID = await _dbContext.Categories.AnyAsync(g => g.CategoryId == dto.CategoryId);
-
-            if (!validateCategoryID)
-                return BadRequest("Not validate Category ID");
-
-            bool validateSubCategoryID = await _dbContext.subCategories
-            .AnyAsync(s => s.SubCategoryId == dto.SubCategoryId && s.CategoryId == dto.CategoryId);
-
-            var subCat = await _dbContext.subCategories
-    .Where(s => s.SubCategoryId == dto.SubCategoryId)
-    .FirstOrDefaultAsync();
-
-            if (subCat != null)
+            // Save images
+            var imageUrls = new List<string>();
+            foreach (var image in dto.Images)
             {
-                Console.WriteLine($"Found SubCategory with CategoryId = {subCat.CategoryId}");
+                var imageExtension = Path.GetExtension(image.FileName).ToLower();
+                Console.WriteLine($"Image Extension: {imageExtension}");
+                if (!_allowedExtensions.Contains(imageExtension))
+                    return BadRequest("Only image files with the following extensions are allowed: " + string.Join(", ", _allowedExtensions));
+
+                if (image.Length > _maxAllowedPosterSize)
+                    return BadRequest("Image size should not exceed 1 MB.");
+
+                var imageFileName = Guid.NewGuid().ToString() + imageExtension;
+                var imagePath = Path.Combine(_imageUploadPath, imageFileName);
+
+                // Save image to server
+                using (var stream = new FileStream(imagePath, FileMode.Create))
+                {
+                    await image.CopyToAsync(stream);
+                }
+
+                imageUrls.Add($"/images/{imageFileName}");
             }
-            else
-            {
-                Console.WriteLine("SubCategory not found at all.");
-            }
 
-
-
-            if (!validateSubCategoryID)
-                return BadRequest("Not validate SubCategory ID");
-            ProductModel product = new ProductModel
+            // Create Product Model and Save to Database
+            var product = new ProductModel
             {
                 ProductId = dto.ProductId,
                 Name = dto.Name,
                 Description = dto.Description,
-                Discount = dto.Discount,
-                IsNew = dto.IsNew,
                 Price = dto.Price,
+                IsNew = dto.IsNew,
+                Discount = dto.Discount,
                 SubCategoryId = dto.SubCategoryId,
                 CategoryId = dto.CategoryId,
-
-                UserId = dto.UserId
+                UserId = dto.UserId,
+                ImageUrls = imageUrls 
             };
 
-            await _dbContext.AddAsync(product);
-            await _dbContext.SaveChangesAsync();
-            return Ok(product);
+            try
+            {
+                await _dbContext.Products.AddAsync(product);
+                await _dbContext.SaveChangesAsync();
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.InnerException?.Message ?? ex.Message);
+            }
         }
+    
 
 
 
-        [HttpGet]
+
+[HttpGet]
 
         public async Task<IActionResult> GetALLAsync()
         {

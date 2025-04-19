@@ -22,19 +22,18 @@ namespace MoviesApi.models
                 .HasForeignKey(p => p.SubCategoryId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // ✅ منع الحذف التتابعي بين `ProductModel` و `Category`
+            modelBuilder.Entity<subCategory>()
+            .HasOne(s => s.Category)
+            .WithMany(c => c.SubCategories)
+            .HasForeignKey(s => s.CategoryId)
+            .OnDelete(DeleteBehavior.Cascade); // Cascade delete
+
+            // Allow cascade delete for Category -> ProductModel relationship
             modelBuilder.Entity<ProductModel>()
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            // ✅ منع الحذف التتابعي بين `SubCategory` و `Category`
-            modelBuilder.Entity<subCategory>()
-                .HasOne(s => s.Category)
-                .WithMany(c => c.SubCategories)
-                .HasForeignKey(s => s.CategoryId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete
 
             base.OnModelCreating(modelBuilder);
         }

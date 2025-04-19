@@ -29,7 +29,7 @@ namespace MedBridge.Controllers.ProductControllers
             if (!_allowedExtensions.Contains(Path.GetExtension(dto.Image.FileName).ToLower()))
                 return BadRequest("only png and jpg images are allowed");
             if (dto.Image.Length > _maxAllowedPosterSize)
-                return BadRequest("Max Allowed size for image is 1 MB");
+                return BadRequest("Max Allowed size for image is 10 MB");
 
             using var stream = new MemoryStream();
 
