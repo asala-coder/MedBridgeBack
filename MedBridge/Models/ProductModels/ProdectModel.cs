@@ -17,6 +17,8 @@ namespace MedBridge.Models.ProductModels
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
+        public int StockQuantity { get; set; }
+
         public bool IsNew { get; set; }
 
         public double Discount { get; set; }
@@ -25,11 +27,15 @@ namespace MedBridge.Models.ProductModels
         public int SubCategoryId { get; set; }
         public subCategory SubCategory { get; set; }
 
-        // ✅ Add Foreign key for Category
+        // Foreign key for Category
         public int CategoryId { get; set; }
         public Category Category { get; set; }
-        public List<string> ImageUrls { get; set; }
+
+        // Store image URLs
+        public List<string> ImageUrls { get; set; } = new List<string>();
+
+        // Foreign key for User
         public int UserId { get; set; }
-        public User user { get; set; }
+        public User User { get; set; }
     }
 }

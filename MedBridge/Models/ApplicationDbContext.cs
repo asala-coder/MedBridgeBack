@@ -36,7 +36,11 @@ namespace MoviesApi.models
                 .OnDelete(DeleteBehavior.Cascade); // Cascade delete
 
             base.OnModelCreating(modelBuilder);
+
+        
         }
+
+
 
 
 
@@ -49,9 +53,11 @@ namespace MoviesApi.models
         public DbSet<User> users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
-        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartModel> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
 
         public DbSet<ContactUs> ContactUs { get; set; }
+
+        public DbSet<Favourite> Favourites { get; set; }
     }
 }

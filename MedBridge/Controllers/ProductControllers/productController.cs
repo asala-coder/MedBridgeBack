@@ -1,4 +1,5 @@
 ﻿using MedBridge.Dtos.Product;
+using MedBridge.Dtos.ProductADD;
 using MedBridge.Models.ProductModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,70 +15,56 @@ namespace MedBridge.Controllers.ProductControllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly string _imageUploadPath = Path.Combine(Directory.GetCurrentDirectory(), "assets", "images");
+        private readonly string _baseUrl = "https://10.0.2.2:7273"; // Replace with your actual base URL
 
         public productController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
-        private List<string> _allowedExtensions = new List<string>
-{
-    ".jpg",
-    ".jpeg",
-    ".png",
-    ".gif",
-    ".bmp",
-    ".webp",
-    ".tiff",
-    ".tif",
-    ".svg",
-    ".ico",
-    ".heif"
-};
-        private double _maxAllowedPosterSize = 10 * 1024 * 1024; // Max size: 10 MB (10,048,576 bytes)
+
+        private readonly List<string> _allowedExtensions = new List<string>
+        {
+            ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff", ".tif", ".svg", ".ico", ".heif"
+        };
+
+        private readonly double _maxAllowedImageSize = 10 * 1024 * 1024; 
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromForm] ProductDto dto)
+        public async Task<IActionResult> CreateAsync([FromForm] ProductADDDto dto)
         {
-            // Validate CategoryId
-            var categoryExists = await _dbContext.Categories
-                .AnyAsync(c => c.CategoryId == dto.CategoryId);
-            if (!categoryExists) return BadRequest("Category ID does not exist.");
+            // Validate Category
+            if (!await _dbContext.Categories.AnyAsync(c => c.CategoryId == dto.CategoryId))
+                return BadRequest("Invalid Category ID.");
 
-            // Validate SubCategoryId
-            var subCategoryExists = await _dbContext.subCategories
-                .AnyAsync(s => s.SubCategoryId == dto.SubCategoryId && s.CategoryId == dto.CategoryId);
-            if (!subCategoryExists) return BadRequest("SubCategory ID does not exist or does not match Category ID.");
+            // Validate SubCategory
+            if (!await _dbContext.subCategories.AnyAsync(s => s.SubCategoryId == dto.SubCategoryId && s.CategoryId == dto.CategoryId))
+                return BadRequest("Invalid or mismatched SubCategory ID.");
 
-            // Validate UserId
-            var userExists = await _dbContext.users
-                .AnyAsync(u => u.Id == dto.UserId);
-            if (!userExists) return BadRequest("The specified UserId does not exist.");
+            // Validate User
+            if (!await _dbContext.users.AnyAsync(u => u.Id == dto.UserId))
+                return BadRequest("Invalid User ID.");
 
-            // Save images
             var imageUrls = new List<string>();
             foreach (var image in dto.Images)
             {
-                var imageExtension = Path.GetExtension(image.FileName).ToLower();
-                Console.WriteLine($"Image Extension: {imageExtension}");
-                if (!_allowedExtensions.Contains(imageExtension))
-                    return BadRequest("Only image files with the following extensions are allowed: " + string.Join(", ", _allowedExtensions));
+                var ext = Path.GetExtension(image.FileName).ToLower();
+                if (!_allowedExtensions.Contains(ext))
+                    return BadRequest("Unsupported image format.");
 
-                if (image.Length > _maxAllowedPosterSize)
-                    return BadRequest("Image size should not exceed 1 MB.");
+                if (image.Length > _maxAllowedImageSize)
+                    return BadRequest("Image size exceeds 10 MB.");
 
-                var imageFileName = Guid.NewGuid().ToString() + imageExtension;
-                var imagePath = Path.Combine(_imageUploadPath, imageFileName);
+                var fileName = Guid.NewGuid() + ext;
+                var savePath = Path.Combine(_imageUploadPath, fileName);
 
-                // Save image to server
-                using (var stream = new FileStream(imagePath, FileMode.Create))
+                using (var stream = new FileStream(savePath, FileMode.Create))
                 {
                     await image.CopyToAsync(stream);
                 }
 
-                imageUrls.Add($"/images/{imageFileName}");
+                imageUrls.Add($"{_baseUrl}/images/{fileName}");
             }
 
-            // Create Product Model and Save to Database
             var product = new ProductModel
             {
                 ProductId = dto.ProductId,
@@ -85,11 +72,12 @@ namespace MedBridge.Controllers.ProductControllers
                 Description = dto.Description,
                 Price = dto.Price,
                 IsNew = dto.IsNew,
+                StockQuantity = dto.StockQuantity,
                 Discount = dto.Discount,
                 SubCategoryId = dto.SubCategoryId,
                 CategoryId = dto.CategoryId,
                 UserId = dto.UserId,
-                ImageUrls = imageUrls 
+                ImageUrls = imageUrls
             };
 
             try
@@ -103,95 +91,141 @@ namespace MedBridge.Controllers.ProductControllers
                 return StatusCode(500, ex.InnerException?.Message ?? ex.Message);
             }
         }
-    
 
-
-
-
-[HttpGet]
-
-        public async Task<IActionResult> GetALLAsync()
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
         {
-
-            var Products = await _dbContext.Products.ToListAsync();
-
-            return Ok(Products);
-
+            var products = await _dbContext.Products.ToListAsync();
+            return Ok(products);
         }
-
 
         [HttpGet("{id}")]
-
-        public async Task<IActionResult> GetByIdLAsync(int id)
-        {
-
-            var Product = await _dbContext.Products.FindAsync(id);
-
-            if (Product == null)
-                return NotFound();
-
-            return Ok(Product);
-
-        }
-
-
-        [HttpPut("{id}")]
-
-
-        public async Task<IActionResult> updateAsync(int id, [FromForm] ProductDto dto)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
             var product = await _dbContext.Products.FindAsync(id);
-
             if (product == null)
-                return NotFound($"ID {id} not found");
+                return NotFound("Product not found.");
 
+            return Ok(product);
+        }
 
-            //if (dto.Image != null)
-            //{
-
-
-            //    if (!_allowedExtensions.Contains(Path.GetExtension(dto.Image.FileName).ToLower()))
-            //        return BadRequest("only png and jpg images are allowed");
-            //    if (dto.Image.Length > _maxAllowedPosterSize)
-            //        return BadRequest("Max Allowed size for poster is 1 MB");
-
-            //    using var stream = new MemoryStream();
-
-            //    await dto.Image.CopyToAsync(stream);
-
-            //    category.Image = stream.ToArray();
-            //}
-
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAsync(int id, [FromForm] ProductADDDto dto)
+        {
+            var product = await _dbContext.Products.FindAsync(id);
+            if (product == null)
+                return NotFound($"Product with ID {id} not found.");
 
             product.Name = dto.Name;
-
             product.Description = dto.Description;
             product.Price = dto.Price;
             product.Discount = dto.Discount;
-            product.SubCategoryId = dto.SubCategoryId;
-            product.CategoryId = dto.CategoryId;
             product.IsNew = dto.IsNew;
-            _dbContext.SaveChanges();
-            return Ok(product);
+            product.CategoryId = dto.CategoryId;
+            product.SubCategoryId = dto.SubCategoryId;
 
+            // Optional: handle new images if uploaded
+            if (dto.Images != null && dto.Images.Any())
+            {
+                var imageUrls = new List<string>();
+                foreach (var image in dto.Images)
+                {
+                    var ext = Path.GetExtension(image.FileName).ToLower();
+                    if (!_allowedExtensions.Contains(ext))
+                        return BadRequest("Unsupported image format.");
+
+                    if (image.Length > _maxAllowedImageSize)
+                        return BadRequest("Image size exceeds 10 MB.");
+
+                    var fileName = Guid.NewGuid() + ext;
+                    var savePath = Path.Combine(_imageUploadPath, fileName);
+
+                    using (var stream = new FileStream(savePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+
+                    imageUrls.Add($"{_baseUrl}/images/{fileName}");
+                }
+
+                // Replace old images with new ones
+                product.ImageUrls = imageUrls;
+            }
+
+            await _dbContext.SaveChangesAsync();
+            return Ok(product);
         }
 
         [HttpDelete("{id}")]
-
-
-        public async Task<IActionResult> deleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-
             var product = await _dbContext.Products.FindAsync(id);
-
             if (product == null)
-                return NotFound($"ID {id} not found");
+                return NotFound($"Product with ID {id} not found.");
 
+            _dbContext.Products.Remove(product);
+            await _dbContext.SaveChangesAsync();
 
-            _dbContext.Remove(product);
-            _dbContext.SaveChanges();
-
-            return Ok(product);
+            return Ok("Product deleted successfully.");
         }
+   
+//[HttpPut("{id}")]
+
+
+//        public async Task<IActionResult> updateAsync(int id, [FromForm] ProductDto dto)
+//        {
+//            var product = await _dbContext.Products.FindAsync(id);
+
+//            if (product == null)
+//                return NotFound($"ID {id} not found");
+
+
+//            //if (dto.Image != null)
+//            //{
+
+
+//            //    if (!_allowedExtensions.Contains(Path.GetExtension(dto.Image.FileName).ToLower()))
+//            //        return BadRequest("only png and jpg images are allowed");
+//            //    if (dto.Image.Length > _maxAllowedPosterSize)
+//            //        return BadRequest("Max Allowed size for poster is 1 MB");
+
+//            //    using var stream = new MemoryStream();
+
+//            //    await dto.Image.CopyToAsync(stream);
+
+//            //    category.Image = stream.ToArray();
+//            //}
+
+
+//            product.Name = dto.Name;
+
+//            product.Description = dto.Description;
+//            product.Price = dto.Price;
+//            product.Discount = dto.Discount;
+//            product.SubCategoryId = dto.SubCategoryId;
+//            product.CategoryId = dto.CategoryId;
+//            product.IsNew = dto.IsNew;
+//            _dbContext.SaveChanges();
+//            return Ok(product);
+
+//        }
+
+        //[HttpDelete("{id}")]
+
+
+        //public async Task<IActionResult> deleteAsync(int id)
+        //{
+
+        //    var product = await _dbContext.Products.FindAsync(id);
+
+        //    if (product == null)
+        //        return NotFound($"ID {id} not found");
+
+
+        //    _dbContext.Remove(product);
+        //    _dbContext.SaveChanges();
+
+        //    return Ok(product);
+        //}
     }
 }

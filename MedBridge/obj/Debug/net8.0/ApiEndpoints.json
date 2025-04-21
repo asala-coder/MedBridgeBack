@@ -1,12 +1,27 @@
 [
   {
     "ContainingType": "MedBridge.Controllers.CartController",
+    "Method": "GetCart",
+    "RelativePath": "api/cart",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedBridge.Controllers.CartController",
     "Method": "AddToCart",
     "RelativePath": "api/cart/add",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
+      {
+        "Name": "Id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
       {
         "Name": "ProductId",
         "Type": "System.Int32",
@@ -16,6 +31,103 @@
         "Name": "Quantity",
         "Type": "System.Int32",
         "IsRequired": false
+      },
+      {
+        "Name": "Product.ProductId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Product.Name",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Product.Description",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Product.Price",
+        "Type": "System.Decimal",
+        "IsRequired": false
+      },
+      {
+        "Name": "Product.IsNew",
+        "Type": "System.Boolean",
+        "IsRequired": false
+      },
+      {
+        "Name": "Product.Discount",
+        "Type": "System.Double",
+        "IsRequired": false
+      },
+      {
+        "Name": "Product.SubCategoryId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Product.CategoryId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Product.Images",
+        "Type": "System.Collections.Generic.List\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "Product.StockQuantity",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Product.UserId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedBridge.Controllers.CartController",
+    "Method": "ClearCart",
+    "RelativePath": "api/cart/clear",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedBridge.Controllers.CartController",
+    "Method": "DeleteFromCart",
+    "RelativePath": "api/cart/delete/{productId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "productId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedBridge.Controllers.CartController",
+    "Method": "UpdateQuantity",
+    "RelativePath": "api/cart/update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "CartItemDto",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -53,7 +165,7 @@
   },
   {
     "ContainingType": "MedBridge.Controllers.ProductControllers.CategoriesController",
-    "Method": "GetALLAsync",
+    "Method": "GetAllAsync",
     "RelativePath": "api/Categories",
     "HttpMethod": "GET",
     "IsController": true,
@@ -246,6 +358,48 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MedBridge.Controllers.FavouritesController",
+    "Method": "AddToFavourites",
+    "RelativePath": "api/favourites/add",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "MedBridge.DTOs.AddToFavouritesDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedBridge.Controllers.FavouritesController",
+    "Method": "GetUserFavourites",
+    "RelativePath": "api/favourites/list",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedBridge.Controllers.FavouritesController",
+    "Method": "RemoveFromFavourites",
+    "RelativePath": "api/favourites/remove/{productId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "productId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MedBridge.Controllers.UserController",
     "Method": "RefreshToken",
     "RelativePath": "api/MedBridge/refresh-token",
@@ -270,7 +424,7 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "email",
+        "Name": "Email",
         "Type": "System.String",
         "IsRequired": true
       }
@@ -667,6 +821,11 @@
         "IsRequired": false
       },
       {
+        "Name": "StockQuantity",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
         "Name": "UserId",
         "Type": "System.Int32",
         "IsRequired": false
@@ -676,7 +835,7 @@
   },
   {
     "ContainingType": "MedBridge.Controllers.ProductControllers.productController",
-    "Method": "GetALLAsync",
+    "Method": "GetAllAsync",
     "RelativePath": "api/product",
     "HttpMethod": "GET",
     "IsController": true,
@@ -686,7 +845,7 @@
   },
   {
     "ContainingType": "MedBridge.Controllers.ProductControllers.productController",
-    "Method": "GetByIdLAsync",
+    "Method": "GetByIdAsync",
     "RelativePath": "api/product/{id}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -702,7 +861,7 @@
   },
   {
     "ContainingType": "MedBridge.Controllers.ProductControllers.productController",
-    "Method": "updateAsync",
+    "Method": "UpdateAsync",
     "RelativePath": "api/product/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -759,6 +918,11 @@
         "IsRequired": false
       },
       {
+        "Name": "StockQuantity",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
         "Name": "UserId",
         "Type": "System.Int32",
         "IsRequired": false
@@ -768,7 +932,7 @@
   },
   {
     "ContainingType": "MedBridge.Controllers.ProductControllers.productController",
-    "Method": "deleteAsync",
+    "Method": "DeleteAsync",
     "RelativePath": "api/product/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
@@ -820,7 +984,7 @@
   },
   {
     "ContainingType": "MedBridge.Controllers.ProductControllers.SubcategoriesController",
-    "Method": "GetALLAsync",
+    "Method": "GetAllAsync",
     "RelativePath": "api/Subcategories",
     "HttpMethod": "GET",
     "IsController": true,
@@ -830,7 +994,7 @@
   },
   {
     "ContainingType": "MedBridge.Controllers.ProductControllers.SubcategoriesController",
-    "Method": "GetByIdLAsync",
+    "Method": "GetByIdAsync",
     "RelativePath": "api/Subcategories/{id}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -846,7 +1010,7 @@
   },
   {
     "ContainingType": "MedBridge.Controllers.ProductControllers.SubcategoriesController",
-    "Method": "updateAsync",
+    "Method": "UpdateAsync",
     "RelativePath": "api/Subcategories/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
@@ -887,7 +1051,7 @@
   },
   {
     "ContainingType": "MedBridge.Controllers.ProductControllers.SubcategoriesController",
-    "Method": "deleteAsync",
+    "Method": "DeleteAsync",
     "RelativePath": "api/Subcategories/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,

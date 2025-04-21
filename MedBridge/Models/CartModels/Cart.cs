@@ -1,6 +1,6 @@
 ﻿namespace MedBridge.Models
 {
-    public class Cart
+    public class CartModel
     {
        
             public int Id { get; set; }  // معرف السلة

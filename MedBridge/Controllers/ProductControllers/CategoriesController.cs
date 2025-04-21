@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoviesApi.models;
+using System.Linq;
 
 namespace MedBridge.Controllers.ProductControllers
 {
@@ -12,58 +13,67 @@ namespace MedBridge.Controllers.ProductControllers
     {
 
         private readonly ApplicationDbContext _dbContext;
-        private new List<string> _allowedExtensions = new List<string> { ".jpg", ".png" };
-        private double _maxAllowedPosterSize = 1048576;
+        private readonly List<string> _allowedExtensions = new List<string>
+        {
+            ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff", ".tif", ".svg", ".ico", ".heif"
+        };
+
+        private readonly double _maxAllowedImageSize = 10 * 1024 * 1024;
+        private readonly string _imageUploadPath = Path.Combine(Directory.GetCurrentDirectory(), "assets", "images");
+        private readonly string _baseUrl = "https://10.0.2.2:7273"; // Replace with your actual base URL
 
         public CategoriesController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
-
         [HttpPost]
         public async Task<IActionResult> CreateAsync(CategoryDto dto)
         {
-
             if (dto.Image == null)
-                return BadRequest("image is required");
-            if (!_allowedExtensions.Contains(Path.GetExtension(dto.Image.FileName).ToLower()))
-                return BadRequest("only png and jpg images are allowed");
-            if (dto.Image.Length > _maxAllowedPosterSize)
-                return BadRequest("Max Allowed size for image is 10 MB");
+                return BadRequest("Image is required.");
 
-            using var stream = new MemoryStream();
+            var ext = Path.GetExtension(dto.Image.FileName).ToLower();
+            if (!_allowedExtensions.Contains(ext))
+                return BadRequest("Only png and jpg images are allowed.");
 
-            await dto.Image.CopyToAsync(stream);
+            if (dto.Image.Length > _maxAllowedImageSize)
+                return BadRequest("Max allowed size for image is 10 MB.");
 
+            // Generate unique file name and save the image
+            var fileName = Guid.NewGuid() + ext;
+            var savePath = Path.Combine(_imageUploadPath, fileName);
 
-            Category category = new Category
+            using (var stream = new FileStream(savePath, FileMode.Create))
             {
+                await dto.Image.CopyToAsync(stream);
+            }
 
+            var imageUrl = $"{_baseUrl}/images/{fileName}";
+
+            var category = new Category
+            {
                 CategoryId = dto.CategoryId,
-
                 Name = dto.Name,
-
                 Description = dto.Description,
-
-                Image = stream.ToArray()
+                ImageUrl = imageUrl // Store only the URL
             };
 
-            _dbContext.Add(category);
-            _dbContext.SaveChanges();
+            _dbContext.Categories.Add(category);
+            await _dbContext.SaveChangesAsync();
+
             return Ok(category);
         }
 
 
 
         [HttpGet]
-
-        public async Task<IActionResult> GetALLAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
-
-            var categories = await _dbContext.Categories.ToListAsync();
+            var categories = await _dbContext.Categories
+         
+                .ToListAsync();
 
             return Ok(categories);
-
         }
 
 
@@ -83,39 +93,42 @@ namespace MedBridge.Controllers.ProductControllers
 
 
         [HttpPut("{id}")]
-
-
-        public async Task <IActionResult> updateAsync(int id, [FromForm] CategoryDto  dto)
+        public async Task<IActionResult> updateAsync(int id, [FromForm] CategoryDto dto)
         {
             var category = await _dbContext.Categories.FindAsync(id);
 
             if (category == null)
                 return NotFound($"ID {id} not found");
 
-
-            if (dto. Image!= null)
+            if (dto.Image != null)
             {
+                var ext = Path.GetExtension(dto.Image.FileName).ToLower();
 
+                if (!_allowedExtensions.Contains(ext))
+                    return BadRequest("Only png and jpg images are allowed.");
 
-                if (!_allowedExtensions.Contains(Path.GetExtension(dto.Image.FileName).ToLower()))
-                    return BadRequest("only png and jpg images are allowed");
-                if (dto.Image.Length > _maxAllowedPosterSize)
-                    return BadRequest("Max Allowed size for poster is 1 MB");
+                if (dto.Image.Length > _maxAllowedImageSize)
+                    return BadRequest("Max allowed size for image is 10 MB.");
 
-                using var stream = new MemoryStream();
+                var fileName = Guid.NewGuid() + ext;
+                var savePath = Path.Combine(_imageUploadPath, fileName);
 
-                await dto.Image.CopyToAsync(stream);
+                using (var stream = new FileStream(savePath, FileMode.Create))
+                {
+                    await dto.Image.CopyToAsync(stream);
+                }
 
-                category.Image = stream.ToArray();
+                var imageUrl = $"{_baseUrl}/images/{fileName}";
+                category.ImageUrl = imageUrl;
             }
-
 
             category.Name = dto.Name;
             category.Description = dto.Description;
-            _dbContext.SaveChanges();
-            return Ok(category);
+            await _dbContext.SaveChangesAsync();
 
+            return Ok(category);
         }
+
 
         [HttpDelete("{id}")]
 

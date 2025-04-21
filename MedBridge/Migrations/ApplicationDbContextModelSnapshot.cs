@@ -65,6 +65,28 @@ namespace MedBridge.Migrations
                     b.ToTable("CartItems");
                 });
 
+            modelBuilder.Entity("MedBridge.Models.Favourite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Favourites");
+                });
+
             modelBuilder.Entity("MedBridge.Models.Messages.ContactUs", b =>
                 {
                     b.Property<int>("MessageId")
@@ -99,9 +121,9 @@ namespace MedBridge.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Image")
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -145,6 +167,9 @@ namespace MedBridge.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("int");
+
                     b.Property<int>("SubCategoryId")
                         .HasColumnType("int");
 
@@ -177,9 +202,9 @@ namespace MedBridge.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Image")
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasColumnType("varbinary(max)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -292,6 +317,17 @@ namespace MedBridge.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("MedBridge.Models.Favourite", b =>
+                {
+                    b.HasOne("MedBridge.Models.ProductModels.ProductModel", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("MedBridge.Models.Messages.ContactUs", b =>
                 {
                     b.HasOne("MedBridge.Models.User", "User")
@@ -317,7 +353,7 @@ namespace MedBridge.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("MedBridge.Models.User", "user")
+                    b.HasOne("MedBridge.Models.User", "User")
                         .WithMany("Products")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -327,7 +363,7 @@ namespace MedBridge.Migrations
 
                     b.Navigation("SubCategory");
 
-                    b.Navigation("user");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("MedBridge.Models.ProductModels.subCategory", b =>

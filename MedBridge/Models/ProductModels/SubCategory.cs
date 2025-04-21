@@ -13,7 +13,7 @@ namespace MedBridge.Models.ProductModels
 
         public string Description { get; set; }
 
-        public byte[] Image { get; set; }
+        public string ImageUrl { get; set; }
 
         [ForeignKey("Category")]
         public int CategoryId { get; set; }

@@ -2,32 +2,40 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MoviesApi.models;
+using Microsoft.Extensions.FileProviders;
 using System.Text;
+using Microsoft.Extensions.Configuration;
+using MoviesApi.models;
+using MedBridge.Models; // Make sure to import the CartService and relevant models
+using MedBridge.Services; // Import the namespace for CartService if needed
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// 1. Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-// Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
 builder.Services.AddControllers();
 builder.Services.AddMemoryCache();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-           .AddJwtBearer(options =>
-           {
-               options.TokenValidationParameters = new TokenValidationParameters
-               {
-                   ValidateIssuer = true,
-                   ValidateAudience = true,
-                   ValidateLifetime = true,
-                   ValidateIssuerSigningKey = true,
-                   ValidIssuer = builder.Configuration["Jwt:Issuer"],
-                   ValidAudience = builder.Configuration["Jwt:Audience"],
-                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-               };
-           });
+// Register the CartService with DI container
+builder.Services.AddScoped<CartService>(); // This line registers CartService as scoped
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
 
 builder.Services.AddCors(options =>
 {
@@ -39,15 +47,14 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Then in app.UseCors:
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "MedBridfe",
-        Description = "Api for MedBridgeProject ",
+        Title = "MedBridge API",
+        Description = "API for MedBridge Project",
         Contact = new OpenApiContact
         {
             Name = "Abdo",
@@ -61,7 +68,6 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 
-    // Add JWT Authentication to Swagger
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -69,7 +75,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Enter your JWT token in the format: Bearer {your_token}"
+        Description = "Enter your JWT token like: Bearer {your_token}"
     });
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -81,18 +87,25 @@ builder.Services.AddSwaggerGen(options =>
                 {
                     Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
-                },
-                Scheme = "oauth2",
-                Name = "Bearer",
-                In = ParameterLocation.Header
+                }
             },
-            new List<string>()  // This part was incorrectly formatted in your code
+            Array.Empty<string>()
         }
     });
 });
+
+// 2. Configure Kestrel to use SSL (HTTPS).
+//builder.WebHost.ConfigureKestrel(options =>
+//{
+//    options.Listen(IPAddress.Any, 7273, listenOptions =>
+//    {
+//        listenOptions.UseHttps("path-to-your-certificate.pfx", "your-certificate-password");
+//    });
+//});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 3. Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -100,10 +113,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors(
-    c => c.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
-    );
 
+// Enable static files for images
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "assets", "images")),
+    RequestPath = "/images"
+});
+
+app.UseCors("AllowAll");
+
+app.UseAuthentication(); // Needed for [Authorize]
 app.UseAuthorization();
 
 app.MapControllers();

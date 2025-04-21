@@ -12,6 +12,8 @@ namespace MedBridge.Models
 
             // العلاقات بين الجداول
             public ProductModel Product { get; set; }  // العلاقة مع جدول المنتجات
-            public Cart Cart { get; set; }
+            public CartModel Cart { get; set; }
+
+
     }
 }

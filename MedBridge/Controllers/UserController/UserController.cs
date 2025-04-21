@@ -234,14 +234,16 @@ namespace MedBridge.Controllers
 
     
         [HttpGet("User/{email}")]
-        public async Task<IActionResult> GetUser(string email)
+        public async Task<IActionResult> GetUser(string Email)
         {
-            var user = await _context.users.FirstOrDefaultAsync(u => u.Email == email);
-            if (user == null)
+
+            var existingUser = await _context.users.FirstOrDefaultAsync(u => u.Email == Email);
+
+            if (existingUser == null)
             {
                 return NotFound(new { message = "User not found" });
             }
-            return Ok(user);
+            return Ok(existingUser);
         }
 
         [HttpPut("User/{Email}")]
@@ -261,13 +263,11 @@ namespace MedBridge.Controllers
 
             existingUser.Name = updatedUser.Name;
             existingUser.Email = updatedUser.Email;
-            existingUser.MedicalSpecialist = updatedUser.MedicalSpecialist;
-
-            // If password is provided, we need to hash it (or handle decoding/encryption as needed)
-            if (!string.IsNullOrEmpty(updatedUser.Password))
-            {
-                existingUser.Password = HashPassword(updatedUser.Password);  // Hash the password before saving
-            }
+            //if (!string.IsNullOrWhiteSpace(updatedUser.Password))
+            //{
+            //    existingUser.Password = HashPassword(updatedUser.Password);
+            //}
+            existingUser.MedicalSpecialist = updatedUser.MedicalSpecialist;  // Check if this value is being passed correctly
 
             // Optional: Handle the profile image
             if (profileImage != null)
@@ -284,6 +284,7 @@ namespace MedBridge.Controllers
 
             return Ok(new { message = "Profile updated successfully" });
         }
+
 
         private string HashPassword(string password)
         {
