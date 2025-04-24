@@ -400,6 +400,38 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MedBridge.Controllers.ForgotPassword",
+    "Method": "RequestReset",
+    "RelativePath": "api/ForgotPassword/request-reset",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Microsoft.AspNetCore.Identity.Data.ForgotPasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedBridge.Controllers.ForgotPassword",
+    "Method": "ResetPassword",
+    "RelativePath": "api/ForgotPassword/reset-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "MedBridge.Models.ForgotPassword.ResetPassword",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MedBridge.Controllers.UserController",
     "Method": "RefreshToken",
     "RelativePath": "api/MedBridge/refresh-token",

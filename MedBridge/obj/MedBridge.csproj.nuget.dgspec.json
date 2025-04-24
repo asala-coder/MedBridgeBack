@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "F:\\projects\\Project\\MedBridge\\MedBridge\\MedBridge.csproj": {}
+    "C:\\Users\\i.tech\\Desktop\\Project Attachments\\Forget Password\\MedBridge\\MedBridge.csproj": {}
   },
   "projects": {
-    "F:\\projects\\Project\\MedBridge\\MedBridge\\MedBridge.csproj": {
+    "C:\\Users\\i.tech\\Desktop\\Project Attachments\\Forget Password\\MedBridge\\MedBridge.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\projects\\Project\\MedBridge\\MedBridge\\MedBridge.csproj",
+        "projectUniqueName": "C:\\Users\\i.tech\\Desktop\\Project Attachments\\Forget Password\\MedBridge\\MedBridge.csproj",
         "projectName": "MedBridge",
-        "projectPath": "F:\\projects\\Project\\MedBridge\\MedBridge\\MedBridge.csproj",
-        "packagesPath": "C:\\Users\\pc\\.nuget\\packages\\",
-        "outputPath": "F:\\projects\\Project\\MedBridge\\MedBridge\\obj\\",
+        "projectPath": "C:\\Users\\i.tech\\Desktop\\Project Attachments\\Forget Password\\MedBridge\\MedBridge.csproj",
+        "packagesPath": "C:\\Users\\i.tech\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\i.tech\\Desktop\\Project Attachments\\Forget Password\\MedBridge\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\pc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\i.tech\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

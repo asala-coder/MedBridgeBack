@@ -1,4 +1,5 @@
 ﻿using MedBridge.Models;
+using MedBridge.Models.ForgotPassword;
 using MedBridge.Models.Messages;
 using MedBridge.Models.ProductModels;
 using Microsoft.EntityFrameworkCore;
@@ -59,5 +60,6 @@ namespace MoviesApi.models
         public DbSet<ContactUs> ContactUs { get; set; }
 
         public DbSet<Favourite> Favourites { get; set; }
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
     }
 }
