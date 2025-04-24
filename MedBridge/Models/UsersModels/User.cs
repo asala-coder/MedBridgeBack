@@ -38,10 +38,11 @@ namespace MedBridge.Models
         public byte[]? ProfileImage { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public string Role { get; set; } = "User";
-
+        public string? Provider { get; set; } // "Google" أو null
 
         public ICollection<ProductModel> Products { get; set; } = new List<ProductModel>();
 
         public ICollection<ContactUs> ContactUs { get; set; } = new List<ContactUs>();
+
     }
 }

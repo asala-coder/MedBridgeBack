@@ -1,13 +1,15 @@
 ﻿using MedBridge.Models.ForgotPassword;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using MoviesApi.models;
 
-namespace MedBridge.Controllers
+namespace MedBridge.Controllers.ForgotPassword
 {
     [Route("api/ForgotPassword")]
     [ApiController]
+    [Authorize]
     public class ForgotPassword : ControllerBase
     {
             private readonly ApplicationDbContext _context;

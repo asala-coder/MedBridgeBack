@@ -345,6 +345,11 @@
         "IsRequired": false
       },
       {
+        "Name": "User.Provider",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "User.Products",
         "Type": "System.Collections.Generic.ICollection\u00601[[MedBridge.Models.ProductModels.ProductModel, MedBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": false
@@ -400,7 +405,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "MedBridge.Controllers.ForgotPassword",
+    "ContainingType": "MedBridge.Controllers.ForgotPassword.ForgotPassword",
     "Method": "RequestReset",
     "RelativePath": "api/ForgotPassword/request-reset",
     "HttpMethod": "POST",
@@ -416,7 +421,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "MedBridge.Controllers.ForgotPassword",
+    "ContainingType": "MedBridge.Controllers.ForgotPassword.ForgotPassword",
     "Method": "ResetPassword",
     "RelativePath": "api/ForgotPassword/reset-password",
     "HttpMethod": "POST",
@@ -443,6 +448,38 @@
         "Name": "refreshToken",
         "Type": "System.String",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedBridge.Controllers.UserController",
+    "Method": "SignInWithGoogle",
+    "RelativePath": "api/MedBridge/signin/google",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "MedBridge.Models.GoogLe_signIn.GoogleSignInRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedBridge.Controllers.UserController",
+    "Method": "CompleteGoogleProfile",
+    "RelativePath": "api/MedBridge/signin/google/complete-profile",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "MedBridge.Models.GoogLe_signIn.UserProfileRequest",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -543,6 +580,11 @@
       },
       {
         "Name": "Role",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Provider",
         "Type": "System.String",
         "IsRequired": false
       },
@@ -696,6 +738,11 @@
         "IsRequired": false
       },
       {
+        "Name": "Provider",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
         "Name": "Products",
         "Type": "System.Collections.Generic.ICollection\u00601[[MedBridge.Models.ProductModels.ProductModel, MedBridge, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": false
@@ -783,6 +830,11 @@
       },
       {
         "Name": "Role",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "Provider",
         "Type": "System.String",
         "IsRequired": false
       },

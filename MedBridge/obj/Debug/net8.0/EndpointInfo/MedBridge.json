@@ -481,6 +481,9 @@
                   "User.Role": {
                     "type": "string"
                   },
+                  "User.Provider": {
+                    "type": "string"
+                  },
                   "User.Products": {
                     "type": "array",
                     "items": {
@@ -545,6 +548,9 @@
                   "style": "form"
                 },
                 "User.Role": {
+                  "style": "form"
+                },
+                "User.Provider": {
                   "style": "form"
                 },
                 "User.Products": {
@@ -1228,6 +1234,9 @@
                   "Role": {
                     "type": "string"
                   },
+                  "Provider": {
+                    "type": "string"
+                  },
                   "Products": {
                     "type": "array",
                     "items": {
@@ -1283,6 +1292,9 @@
                   "style": "form"
                 },
                 "Role": {
+                  "style": "form"
+                },
+                "Provider": {
                   "style": "form"
                 },
                 "Products": {
@@ -1372,6 +1384,9 @@
                   "Role": {
                     "type": "string"
                   },
+                  "Provider": {
+                    "type": "string"
+                  },
                   "Products": {
                     "type": "array",
                     "items": {
@@ -1429,12 +1444,77 @@
                 "Role": {
                   "style": "form"
                 },
+                "Provider": {
+                  "style": "form"
+                },
                 "Products": {
                   "style": "form"
                 },
                 "ContactUs": {
                   "style": "form"
                 }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/MedBridge/signin/google": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleSignInRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleSignInRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleSignInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/MedBridge/signin/google/complete-profile": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserProfileRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserProfileRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserProfileRequest"
               }
             }
           }
@@ -1610,6 +1690,9 @@
                   "Role": {
                     "type": "string"
                   },
+                  "Provider": {
+                    "type": "string"
+                  },
                   "Products": {
                     "type": "array",
                     "items": {
@@ -1669,6 +1752,9 @@
                   "style": "form"
                 },
                 "Role": {
+                  "style": "form"
+                },
+                "Provider": {
                   "style": "form"
                 },
                 "Products": {
@@ -1853,6 +1939,16 @@
         "type": "object",
         "properties": {
           "email": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GoogleSignInRequest": {
+        "type": "object",
+        "properties": {
+          "idToken": {
             "type": "string",
             "nullable": true
           }
@@ -2086,6 +2182,10 @@
             "type": "string",
             "nullable": true
           },
+          "provider": {
+            "type": "string",
+            "nullable": true
+          },
           "products": {
             "type": "array",
             "items": {
@@ -2098,6 +2198,32 @@
             "items": {
               "$ref": "#/components/schemas/ContactUs"
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserProfileRequest": {
+        "type": "object",
+        "properties": {
+          "googleToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "medicalSpecialist": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
             "nullable": true
           }
         },

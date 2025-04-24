@@ -9,6 +9,8 @@ using MoviesApi.models;
 using MedBridge.Models; // Make sure to import the CartService and relevant models
 using MedBridge.Services; // Import the namespace for CartService if needed
 using System.Net;
+using static MedBridge.Services.Jwt_Services;
+using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +38,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+})
+.AddGoogle(options =>
+{
+    options.ClientId = "http://1049006917214-i176fq9a27npnugc97ljljb7b5lufkgh.apps.googleusercontent.com";
+    options.ClientSecret = "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";
+});
+
+
 
 builder.Services.AddCors(options =>
 {
@@ -46,6 +60,12 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader();
     });
 });
+builder.Services.AddScoped<JwtService>();
+builder.Services.AddHttpClient();
+
+builder.Services.AddControllers();
+
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -120,6 +140,8 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "assets", "images")),
     RequestPath = "/images"
 });
+
+
 
 app.UseCors("AllowAll");
 

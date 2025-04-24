@@ -1,6 +1,9 @@
 ﻿
 
+using Google.Apis.Auth;
+using MedBridge.Migrations;
 using MedBridge.Models;
+using MedBridge.Models.GoogLe_signIn;
 using MedBridge.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,27 +15,40 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
+using static MedBridge.Services.Jwt_Services;
+
 namespace MedBridge.Controllers
 {
-    [ApiController]
+    
     [Route("api/MedBridge")]
+    [ApiController]
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly ILogger<UserController> _logger;
         private readonly IMemoryCache _memoryCache;
+        private readonly JwtService _jwtService;
+        private readonly IGoogleSignIn _GoogleSignIn;
+
+        public UserController(IGoogleSignIn GoogleSignIn)
+        {
+            _GoogleSignIn = GoogleSignIn;
+        }
 
         public UserController(
             ApplicationDbContext context,
             IConfiguration configuration,
             ILogger<UserController> logger,
+            JwtService jwtService,
             IMemoryCache memoryCache)
         {
             _context = context;
             _configuration = configuration;
             _logger = logger;
             _memoryCache = memoryCache;
+            _jwtService = jwtService;
+
         }
 
         [HttpPost("User/signup")]
@@ -166,6 +182,34 @@ namespace MedBridge.Controllers
                 _logger.LogError(ex, "Error in SignIn");
                 return StatusCode(500, new { error = "An error in SignIn." });
             }
+        }
+        [HttpPost("signin/google")]
+       
+        public async Task<IActionResult> SignInWithGoogle([FromBody] GoogleSignInRequest request)
+        {
+            if (request == null || string.IsNullOrWhiteSpace(request.IdToken))
+                return BadRequest ("Invalid Google ID token");
+
+            var result = await _GoogleSignIn.SignInWithGoogle(request.IdToken);
+
+            if (result == null)
+                return BadRequest ("Google login failed");
+
+            return Ok(result);
+        }
+        [HttpPost("signin/google/complete-profile")]
+   
+        public async Task<IActionResult> CompleteGoogleProfile([FromBody] UserProfileRequest request)
+        {
+            if (request == null || string.IsNullOrWhiteSpace(request.Email))
+                return BadRequest("Incomplete data");
+
+            var success = await _GoogleSignIn.CompleteProfile(request);
+
+            if (!success)
+                return BadRequest("Could not complete profile");
+
+            return Ok(new { message = "Profile completed successfully" });
         }
 
         [HttpPost("refresh-token")]
