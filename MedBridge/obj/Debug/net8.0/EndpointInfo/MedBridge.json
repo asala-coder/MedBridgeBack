@@ -673,6 +673,18 @@
         }
       }
     },
+    "/api/Dashboard/summary": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/favourites/add": {
       "post": {
         "tags": [
@@ -2194,6 +2206,10 @@
           },
           "user": {
             "$ref": "#/components/schemas/User"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

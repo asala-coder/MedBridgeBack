@@ -437,6 +437,16 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "MedBridge.Controllers.Dashboard.Dashboard",
+    "Method": "GetDashboardSummary",
+    "RelativePath": "api/Dashboard/summary",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "MedBridge.Controllers.FavouritesController",
     "Method": "AddToFavourites",
     "RelativePath": "api/favourites/add",
