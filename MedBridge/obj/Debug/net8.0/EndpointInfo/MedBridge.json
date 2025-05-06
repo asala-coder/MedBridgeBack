@@ -15,6 +15,103 @@
     "version": "v1"
   },
   "paths": {
+    "/api/Admin/add-admin": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Admin/delete-admin/{id}": {
+      "delete": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Admin/block-user/{id}": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Admin/deactivate-user/{id}": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/cart/add": {
       "post": {
         "tags": [
@@ -495,6 +592,9 @@
                     "items": {
                       "$ref": "#/components/schemas/ContactUs"
                     }
+                  },
+                  "User.Status": {
+                    "$ref": "#/components/schemas/UserStatus"
                   }
                 }
               },
@@ -557,6 +657,9 @@
                   "style": "form"
                 },
                 "User.ContactUs": {
+                  "style": "form"
+                },
+                "User.Status": {
                   "style": "form"
                 }
               }
@@ -1248,6 +1351,9 @@
                     "items": {
                       "$ref": "#/components/schemas/ContactUs"
                     }
+                  },
+                  "Status": {
+                    "$ref": "#/components/schemas/UserStatus"
                   }
                 }
               },
@@ -1301,6 +1407,9 @@
                   "style": "form"
                 },
                 "ContactUs": {
+                  "style": "form"
+                },
+                "Status": {
                   "style": "form"
                 }
               }
@@ -1398,6 +1507,9 @@
                     "items": {
                       "$ref": "#/components/schemas/ContactUs"
                     }
+                  },
+                  "Status": {
+                    "$ref": "#/components/schemas/UserStatus"
                   }
                 }
               },
@@ -1451,6 +1563,9 @@
                   "style": "form"
                 },
                 "ContactUs": {
+                  "style": "form"
+                },
+                "Status": {
                   "style": "form"
                 }
               }
@@ -1705,6 +1820,9 @@
                       "$ref": "#/components/schemas/ContactUs"
                     }
                   },
+                  "Status": {
+                    "$ref": "#/components/schemas/UserStatus"
+                  },
                   "profileImage": {
                     "type": "string",
                     "format": "binary"
@@ -1761,6 +1879,9 @@
                   "style": "form"
                 },
                 "ContactUs": {
+                  "style": "form"
+                },
+                "Status": {
                   "style": "form"
                 },
                 "profileImage": {
@@ -2199,6 +2320,9 @@
               "$ref": "#/components/schemas/ContactUs"
             },
             "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/UserStatus"
           }
         },
         "additionalProperties": false
@@ -2228,6 +2352,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "UserStatus": {
+        "enum": [
+          0,
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32"
       },
       "subCategory": {
         "required": [

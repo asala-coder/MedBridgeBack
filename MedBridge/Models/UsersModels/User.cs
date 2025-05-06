@@ -8,6 +8,12 @@ namespace MedBridge.Models
 {
     public class User
     {
+        public enum UserStatus
+        {
+            Active,
+            Blocked,
+            Deactivated
+        }
         [Key]
         public int Id { get; set; }
         [MaxLength(50)]
@@ -43,6 +49,7 @@ namespace MedBridge.Models
         public ICollection<ProductModel> Products { get; set; } = new List<ProductModel>();
 
         public ICollection<ContactUs> ContactUs { get; set; } = new List<ContactUs>();
+        public UserStatus Status { get; set; } = UserStatus.Active;
 
     }
 }
